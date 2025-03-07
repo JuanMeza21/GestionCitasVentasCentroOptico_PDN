@@ -1,4 +1,4 @@
-# GestionCitasVentasCentroOptico_PDN# GestionCitasVentasCentroOptico_PDN
+# GestionCitasVentasCentroOptico_PDN
 
 Gestión de citas y ventas en un centro óptico
 
@@ -32,8 +32,4 @@ Desarrollador Frontend: Juan Sebastian Meza y Jalitza Juliana Carrascal
 Desarrollador Backend: Juan Sebastian Meza y Jalitza Juliana Carrascal 
 Administrador de base de datos:Juan Sebastian Meza y Jalitza Juliana Carrascal 
 Gestor del proyecto: Juan Sebastian Meza
-<<<<<<< HEAD
-Documnetador: Juan Sebastian Meza y Jalitza Juliana Carrascal }
-=======
-Documnetador: Juan Sebastian Meza y Jalitza Juliana Carrascal 
->>>>>>> juanmeza
+Documnetador: Juan Sebastian Meza y Jalitza Juliana Carrascal
