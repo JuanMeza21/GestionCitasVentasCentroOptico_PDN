@@ -1,14 +1,23 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Perfil from "../images/perfill.jpg";
+import { useEffect, useState } from "react";
 
 export const Register_account = () => {
   
   const navigate = useNavigate();
+  const [message, setMessage] = useState("");
 
   const registrarClick = () => {
     navigate("/login");
   }
+
+  useEffect(() => {
+    fetch("http://localhost:8080/register")
+      .then((response) => response.text())
+      .then((data) => setMessage(data))
+      .catch((error) => console.error("Error:", error));
+  }, []);
 
   return (
     <div className='bg-slate-200'>
@@ -36,6 +45,10 @@ export const Register_account = () => {
             <button onClick={registrarClick} type="button" className="cursor-pointer text-[15px] mb-2 hover:bg-blue-500 hover:text-[white] rounded-lg py-1">
               Volver a iniciar Sesión
             </button>
+
+            <div>
+              <h1>{message}</h1>
+            </div>
           </form>
         </div>
       </div>
