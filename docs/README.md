@@ -1,47 +1,84 @@
-# GestionCitasVentasCentroOptico_PDN
+# 👓 Gestión de Citas y Ventas - Centro Óptico _PDN_
 
-Gestión de citas y ventas en un centro óptico
+## 📌 Descripción  
+Este proyecto busca optimizar la gestión de citas, ventas e historias clínicas en un centro óptico a través de una plataforma web dinámica y eficiente.  
 
-Este proyecto se centrará en crear una página web conectada a una base de datos de las personas que hayan tenido citas o compras de productos del centro óptico. Así mismo, la página web tendrá dos roles (secretaria y optómetra). La secretaria se encarga de registrar clientes y llevar todo lo que tiene que ver con las citas y ventas. Por otro lado, la optómetra tendrá que realizar/actualizar la historia clínica e información acerca de la evaluación visual.
+El sistema permitirá a los usuarios realizar las siguientes acciones:  
+✅ **Secretaria**: Registrar clientes, gestionar citas y administrar ventas.  
+✅ **Optómetra**: Crear y actualizar historias clínicas y evaluaciones visuales.  
 
-Objetivos Generales
+El objetivo es mejorar la organización, seguridad y privacidad de la información, eliminando procesos manuales ineficientes.
 
-Desarrollar una página web dinámica conectada a una base de datos que permita la gestión eficiente de clientes, citas, ventas e historias clínicas para un centro óptico.
+---
 
-Objetivos específicos
+## 🎯 Objetivos  
 
-Asegurar la protección de datos sensibles de los clientes, cumpliendo con normas básicas de privacidad y seguridad de la información.
-Desarrollar un sistema de gestión que permita registrar, consultar, modificar y eliminar información relacionada con los clientes, sus citas, las ventas realizadas y las historias clínicas.
+### ✅ **Objetivo General**  
+Desarrollar una página web conectada a una base de datos que permita gestionar de manera eficiente clientes, citas, ventas e historias clínicas en un centro óptico.  
 
-Alcance
+### 🎯 **Objetivos Específicos**  
+- 🔒 **Asegurar la protección de datos sensibles** de los clientes, cumpliendo normas de seguridad y privacidad.  
+- 🔄 **Implementar un sistema de gestión** para registrar, consultar, modificar y eliminar información de clientes, citas, ventas e historias clínicas.  
 
-El proyecto GestiónCitasVentasCentroOptico_PDN desarrollará un sistema web para administrar clientes, citas, ventas e historias clínicas en un centro óptico. Contará con dos roles: secretaria, encargada del registro de clientes y gestión de citas y ventas, y optómetra, responsable de la historia clínica y evaluación visual. La plataforma usará React con Tailwind CSS para el frontend y Spring Boot con PostgreSQL para el backend y la base de datos. Permitirá registrar, consultar, modificar y eliminar información, asegurando seguridad y privacidad de los datos. No incluirá pagos en línea ni analítica avanzada en esta fase.
+---
 
-Problematica
+## 🏆 Alcance  
+El sistema se desarrollará con las siguientes tecnologías:  
 
-Los centros ópticos suelen enfrentar dificultades en la gestión de citas, ventas e historias clínicas debido al uso de sistemas ineficientes o manuales, lo que genera errores, pérdida de información y demoras en la atención. Además, la seguridad y privacidad de los datos son críticas, ya que se manejan historiales clínicos sensibles.
+🔹 **Frontend**: React + Tailwind CSS.  
+🔹 **Backend**: Spring Boot con API REST.  
+🔹 **Base de datos**: PostgreSQL.  
 
-Se requiere un sistema web que optimice estos procesos, garantizando un manejo seguro y eficiente de la información, mejorando la organización y agilizando la atención al paciente.
+🚫 *No incluirá pagos en línea ni analítica avanzada en esta fase.*  
 
-Impacto esperado
+El sistema tendrá dos roles principales:  
 
-Reducción de errores administrativos.  
-Optimización del tiempo en la gestión de citas y ventas.  
-Mayor seguridad y confidencialidad de la información.  
-Mejora en la experiencia del paciente y del equipo administrativo. 
+👩‍💼 **Secretaria** – Registro de clientes y gestión de citas/ventas.  
+👨‍⚕️ **Optómetra** – Administración de historias clínicas y evaluaciones visuales.  
 
-Tecnologias
+---
 
-Para el desarrollo de este proyecto se utilizará React como biblioteca principal para la construcción del frontend y Tailwind CSS. En cuanto al backend, se implementará con Spring Boot, un framework robusto de Java que permitirá gestionar la lógica de negocio, las conexiones con la base de datos y la exposición de una API REST para la comunicación con el frontend y PostgreSQL será el sistema de gestión de base de datos elegido para almacenar de forma segura toda la información de clientes, citas, ventas e historias clínicas.
+## ⚠️ Problema a Resolver  
+Los centros ópticos suelen enfrentar dificultades debido a:  
+❌ Uso de sistemas manuales e ineficientes.  
+❌ Errores en el manejo de información.  
+❌ Pérdida de datos sensibles.  
+❌ Demoras en la atención al paciente.  
 
-Roles
+📌 **Este sistema busca optimizar estos procesos y mejorar la experiencia de atención.**  
 
-Desarrollador Frontend: Juan Sebastian Meza y Jalitza Juliana Carrascal 
+---
 
-Desarrollador Backend: Juan Sebastian Meza y Jalitza Juliana Carrascal 
+## 🌟 Impacto Esperado  
+✔️ Reducción de errores administrativos.  
+✔️ Optimización del tiempo en la gestión de citas y ventas.  
+✔️ Mayor seguridad y confidencialidad de la información.  
+✔️ Mejora en la experiencia del paciente y del equipo administrativo.  
 
-Administrador de base de datos:Juan Sebastian Meza y Jalitza Juliana Carrascal 
+---
 
-Gestor del proyecto: Juan Sebastian Meza
+## 🛠 Tecnologías Utilizadas  
+| Tecnología  | Propósito  |
+|------------|-----------|
+| React      | Desarrollo del frontend |
+| Tailwind CSS | Diseño y estilos |
+| Spring Boot | Desarrollo del backend |
+| PostgreSQL  | Base de datos relacional |
 
-Documentador: Juan Sebastian Meza y Jalitza Juliana Carrascal 
+---
+
+## 🏅 Roles del Proyecto  
+
+| Rol                        | Responsables                          |
+|----------------------------|--------------------------------------|
+| 👩‍💻 **Desarrollador Frontend** | Juan Sebastian Meza, Jalitza Juliana Carrascal |
+| 🖥️ **Desarrollador Backend** | Juan Sebastian Meza, Jalitza Juliana Carrascal |
+| 🗄️ **Administrador de BD** | Juan Sebastian Meza, Jalitza Juliana Carrascal |
+| 📊 **Gestor del Proyecto** | Juan Sebastian Meza |
+| 📑 **Documentador** | Juan Sebastian Meza, Jalitza Juliana Carrascal |
+
+---
+
+ 
+
+🔹 *¡Esperamos que este sistema mejore la gestión en centros ópticos!* 🚀✨  
