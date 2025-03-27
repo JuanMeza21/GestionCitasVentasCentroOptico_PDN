@@ -3,12 +3,24 @@ import Home from "../components/optometrist-comp/HomeO";
 import Historia from "../components/optometrist-comp/Historia";
 import Evaluacion from "../components/optometrist-comp/Evaluacion";
 import Calendario from "../components/optometrist-comp/Calendario";
+import { getAuth, signOut } from "firebase/auth";
 
 export const Optometrist = () => {
   const [selectedComponent, setSelectedComponent] = useState("home");
 
   const seleccionarComponente = (componente) => {
     setSelectedComponent(componente);
+  };
+
+  //Cerrar sesion
+  const cerrarSesion = async () => {
+    const auth = getAuth();
+    try {
+      await signOut(auth);
+      window.location.href = "/login";
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+    }
   };
 
   return (
@@ -23,7 +35,7 @@ export const Optometrist = () => {
         </ol>
 
         <div className='pl-5'>
-          <button className="w-full text-left bg-blue-900 hover:bg-blue-950 text-white py-2 px-2 rounded-l-lg mt-auto">
+          <button onClick={cerrarSesion} className="w-full text-left bg-blue-900 hover:bg-blue-950 text-white py-2 px-2 rounded-l-lg mt-auto">
             Cerrar sesión
           </button>
         </div>

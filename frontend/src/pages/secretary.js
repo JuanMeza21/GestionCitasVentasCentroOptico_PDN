@@ -4,6 +4,7 @@ import Ventas from "../components/secretary-comp/Ventas";
 import Inventario from "../components/secretary-comp/Inventario";
 import Registro from "../components/secretary-comp/RegistroCitas";
 import Calendario from "../components/optometrist-comp/Calendario"
+import { getAuth, signOut } from "firebase/auth";
 
 export const Secretary = () => {
   const[selectedComponent, setSelectedComponent] = useState("home");
@@ -11,6 +12,16 @@ export const Secretary = () => {
   const seleccionarComponente = (componente) => {
     setSelectedComponent(componente);
   }
+
+  const cerrarSesion = async () => {
+    const auth = getAuth();
+    try {
+      await signOut(auth);
+      window.location.href = "/login";
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+    }
+  };
 
   return (
     <div className="min-h-screen flex h-screen bg-blue-500 p-[1px]">
@@ -25,7 +36,7 @@ export const Secretary = () => {
         </ol>
 
         <div className='pl-5'>
-          <button className="w-full text-left bg-blue-900 hover:bg-blue-950 text-white py-2 px-2 rounded-l-lg mt-auto">
+          <button onClick={cerrarSesion} className="w-full text-left bg-blue-900 hover:bg-blue-950 text-white py-2 px-2 rounded-l-lg mt-auto">
             Cerrar sesión
           </button>
         </div>

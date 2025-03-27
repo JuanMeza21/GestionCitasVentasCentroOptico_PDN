@@ -1,22 +1,41 @@
-# BACKEND GestionCitasVentasCentroOptico_PDN
+# 🛠️ BACKEND - Gestión de Citas y Ventas en Centro Óptico _PDN_
 
-DOCUMENTACION
+## 📌 Documentación  
 
-El backend de GestiónCitasVentasCentroOptico_PDN está desarrollado en Spring Boot y utiliza PostgreSQL como base de datos. Gestiona la lógica de negocio, la autenticación de usuarios y expone una API REST para la comunicación con el frontend.  
+El backend de **GestiónCitasVentasCentroOptico_PDN** está desarrollado con **Spring Boot** y utiliza **PostgreSQL** como base de datos. Su propósito es manejar la lógica de negocio, gestionar la autenticación de usuarios y exponer una **API REST** para la comunicación con el frontend.  
 
+---
 
-CONFUGURACION DEL ENTORNO
+## ⚙️ **Configuración del Entorno**  
 
-Requisitos  
-Java 17 o superior: Versión recomendada del lenguaje de programación Java que ofrece mejoras en rendimiento, seguridad y nuevas características.
+Para ejecutar el backend correctamente, asegúrate de tener los siguientes requisitos instalados en tu sistema:  
 
-Spring Boot 3: Framework para desarrollar aplicaciones Java con configuración simplificada, soporte para microservicios y compatibilidad con Jakarta EE.
+### 🔹 **Requisitos Previos**  
 
-Gradle: Herramienta de automatización de compilación que facilita la gestión de dependencias y la ejecución de tareas en proyectos Java.
+| Tecnología  | Propósito  |
+|------------|-----------|
+| **Java 17+** | Lenguaje de programación requerido para ejecutar Spring Boot. |
+| **Spring Boot 3** | Framework que simplifica el desarrollo de aplicaciones Java. |
+| **Gradle** | Herramienta de automatización para gestionar dependencias y compilación. |
+| **PostgreSQL** | Base de datos relacional para almacenar la información del sistema. |
+| **IntelliJ IDEA** | IDE recomendado para desarrollar con Spring Boot. |
+| **Firebase** | Servicio en la nube para autenticación y almacenamiento. |
 
-PostgreSQL: Sistema de gestión de bases de datos relacional, robusto y de código abierto, ideal para aplicaciones escalables.
+---
 
-IDE: IntelliJ IDEA: Entorno de desarrollo integrado (IDE) avanzado, optimizado para Java y frameworks como Spring Boot, con herramientas de depuración y productividad.
+## 📂 **Estructura de Carpetas**  
 
-Instalación y ejecución: Clonar el repositorio e instalar dependencias
-
+```plaintext
+📦 backend
+ ┣ 📂 src
+ ┃ ┣ 📂 main
+ ┃ ┃ ┣ 📂 java/com/example/backend_GCVCO
+ ┃ ┃ ┃ ┣ 📂 HomeController        # Controlador principal
+ ┃ ┃ ┃ ┣ 📂 RegisterController    # Controlador de registro
+ ┃ ┃ ┃ ┗ 📜 BackendGcvcoApplication.java  # Clase principal de la aplicación
+ ┃ ┃ ┣ 📂 resources
+ ┃ ┃ ┃ ┣ 📜 application.properties  # Configuración del proyecto (DB, puerto, etc.)
+ ┃ ┃ ┃ ┗ 📜 data.sql  # Datos iniciales para la base de datos
+ ┣ 📜 build.gradle   # Archivo de configuración para Gradle
+ ┣ 📜 .gitignore     # Archivos y carpetas ignorados en Git
+ ┣ 📜 README.md      # Documentación del backend

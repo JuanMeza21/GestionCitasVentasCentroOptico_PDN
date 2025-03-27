@@ -1,18 +1,81 @@
-# FRONTEND GestionCitasVentasCentroOptico_PDN
+# 🎨 FRONTEND - Gestión de Citas y Ventas en Centro Óptico _PDN_
 
-DOCUMENTACION
+## 📌 Documentación  
 
-La secretaria entre sus opciones tendrá el inicio, donde se verá un resumen global de las citas o productos y demás información importante, la opción de registrar cliente/cita permitirá a la secretaria registrar en la base de datos a una persona si no está en el sistema, de lo contrario se registrará la cita, la opcion de ventas permitirá crear factura y registrar las ventas que se hacen, entre ellas las citas y productos de inventario, la opción inventario permitirá ver qué lista de productos hay en el inventario y por último la opción de calendario de citas permite ver las citas que están agendadas con su respectiva fecha y información. En la parte derecha, el espacio en blanco, ahí se mostrará dinámicamente la opción seleccionada de la barra de navegación.
+El frontend de este sistema web está diseñado para facilitar la gestión de citas, ventas e historias clínicas en un centro óptico. Se implementa con **React.js** y **Tailwind CSS**, proporcionando una interfaz dinámica, responsiva e intuitiva.  
 
-La optómetra tiene entre sus opciones tendrá el inicio, donde se verá un resumen global de las citas o productos y demás información importante, la opción de historias clínicas permitirá a la optometría consultar, crear o actualizar en la base de datos la historia clínica del cliente, la opción de evaluaciones visuales permitirá consultar, crear o actualizar en la base de datos los resultados y diagnóstico, y por último la opción de calendario de citas permite ver las citas que están agendadas con su respectiva fecha y información. En la parte derecha, el espacio en blanco, ahí se mostrará dinámicamente la opción seleccionada de la barra de navegación.
+---
 
+## 🏥 **Estructura y Funcionalidades**  
 
-CONFUGURACION DEL ENTORNO
+### 👩‍💼 **Rol: Secretaria**  
+La secretaria tendrá acceso a las siguientes opciones dentro de la barra de navegación:  
 
-IDE visual studio code: Es un editor de código fuente gratuito que se utiliza para desarrollar software.
+- **📊 Inicio:** Vista general de citas, ventas e información clave.  
+- **📝 Registrar Cliente/Cita:**  
+  - Si el cliente no está registrado, se agregará a la base de datos.  
+  - Si el cliente ya existe, se registrará una nueva cita.  
+- **💰 Ventas:**  
+  - Creación de facturas.  
+  - Registro de ventas (citas y productos del inventario).  
+- **📦 Inventario:** Visualización de los productos disponibles en stock.  
+- **📅 Calendario de Citas:** Consulta de citas programadas con detalles del paciente y fecha.  
 
-Tailwind CSS: Es un framework de CSS de código abierto​ para el diseño de páginas web.
+---
 
-React JS: Es una biblioteca Javascript de código abierto diseñada para crear interfaces de usuario con el objetivo de facilitar el desarrollo de aplicaciones en una sola página.
+### 👨‍⚕️ **Rol: Optómetra**  
+La optómetra tendrá acceso a las siguientes opciones dentro de la barra de navegación:  
 
-Instalación y ejecución: Clonar el repositorio e instalar extensiones necesarias para que escribir codigo sea menos complejo.
+- **📊 Inicio:** Resumen general de citas, ventas e información relevante.  
+- **📖 Historias Clínicas:**  
+  - Consultar, crear y actualizar historias clínicas de los clientes.  
+- **👀 Evaluaciones Visuales:**  
+  - Registro y actualización de diagnósticos y resultados de exámenes visuales.  
+- **📅 Calendario de Citas:**  
+  - Consulta de citas programadas con detalles del paciente y fecha.  
+
+> 📌 **Nota:** La opción seleccionada en la barra de navegación se mostrará dinámicamente en la interfaz.  
+
+---
+
+## ⚙️ **Configuración del Entorno**  
+
+Para desarrollar y ejecutar el frontend, se recomienda el siguiente stack tecnológico:  
+
+### 🖥️ **IDE - Visual Studio Code**  
+- Editor de código gratuito y extensible.  
+- Compatible con extensiones útiles para React y Tailwind CSS.  
+
+### 🏗️ **Frameworks y Bibliotecas**  
+| Tecnología  | Propósito  |
+|------------|-----------|
+| **React.js** | Desarrollo del frontend basado en componentes. |
+| **Tailwind CSS** | Framework CSS para diseño responsivo y personalizable. |
+| **Vite** | Herramienta de desarrollo para React, más rápida que CRA. |
+
+### 🌐 **Lenguajes de Programación**  
+- **JavaScript (JSX):** Lenguaje principal para el desarrollo del frontend.  
+- **CSS (con Tailwind CSS):** Estilización de la interfaz de usuario.  
+
+---
+
+## 📂 **Estructura de Carpetas**  
+
+```plaintext
+📦 frontend
+ ┣ 📂 src
+ ┃ ┣ 📂 assets          # Recursos estáticos (imágenes, íconos)
+ ┃ ┣ 📂 components      # Componentes reutilizables
+ ┃ ┃ ┣ 📂 optometrist-comp  # Componentes relacionados con la optómetra
+ ┃ ┃ ┣ 📂 secretary-comp    # Componentes relacionados con la secretaria
+ ┃ ┃ ┣ 📜 login.jsx         # Componente de inicio de sesión
+ ┃ ┃ ┣ 📜 RegisterAccount.jsx  # Componente de registro de usuario
+ ┃ ┣ 📂 pages          # Páginas principales de la aplicación
+ ┃ ┣ 📂 routes         # Definición de rutas del frontend
+ ┃ ┣ 📂 services       # Conexión con el backend (API requests)
+ ┃ ┣ 📂 styles         # Estilos globales
+ ┃ ┗ 📜 main.jsx       # Punto de entrada principal de la aplicación
+ ┣ 📜 .gitignore       # Archivos y carpetas a ignorar en Git
+ ┣ 📜 package.json     # Dependencias y scripts del proyecto
+ ┣ 📜 vite.config.js   # Configuración de Vite
+ ┗ 📜 README.md        # Documentación del frontend
