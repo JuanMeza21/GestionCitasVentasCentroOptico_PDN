@@ -3,7 +3,7 @@
 ## Tecnologías Utilizadas
 
 - **Frontend**: React, Firebase Auth
-- **Backend**: Spring Boot, Firebase Admin SDK
+- **Backend**: Spring Boot, Firebase 
 - **Base de datos**: Cloud Firestore
 
 ## Autenticación con GitHub
@@ -11,7 +11,6 @@
 ### Configuración Inicial en Firebase
 
 Se ctiva **GitHub** como proveedor de autenticación:
-   - En el menú izquierdo, entra a **Authentication** > **Método de inicio de sesión**.
    - Se configura con:
      - `Client ID` y `Client Secret` 
 
@@ -29,7 +28,9 @@ Se ctiva **GitHub** como proveedor de autenticación:
 
 ### Código Relevante (React)
 
-#### Login con GitHub
+## Autenticación con GitHub
+
+La siguiente parte de codigo describe el proceso de autenticación con GitHub utilizando Firebase Authentication y cómo se registra o actualiza al usuario en Firestore.
 
 ```js
 const result = await signInWithPopup(auth, githubProvider);
@@ -46,66 +47,28 @@ const rolFetch = await fetch(`http://localhost:8080/autenticacion/getRole/${user
 const rol = await rolFetch.text();
 ```
 
-#### Guardado de Rol
+### Descripción
 
+- **`signInWithPopup`**: Lanza una ventana emergente para autenticación con GitHub.
+- **`user`**: Contiene los datos del usuario autenticado.
+- **`setDoc(..., { merge: true })`**: Registra o actualiza los datos del usuario en Firestore sin sobrescribir campos existentes.
+- **`fetch(...)`**: Solicita al backend (por ejemplo, en Spring Boot) el rol asociado al usuario autenticado mediante su `uid`.
+
+---
+
+## Guardado o asignación de rol
+
+Esta parte de codigo se usa para guardar completamente un nuevo usuario con rol incluido
 ```js
-await setDoc(doc(db, "usuarios", tempUser.uid), {
-  uid: tempUser.uid,
-  nombre: tempUser.displayName || "",
-  email: tempUser.email || "",
-  telefono: "",
-  rol: selectedRole,
-});
+await setDoc(
+    doc(db, "usuarios", tempUser.uid),
+    {
+        rol: selectedRole,
+    },
+    { merge: true }
+);
 ```
 
-## Clase `Usuario`
+### Descripción
 
-```java
-public class Usuario {
-    private String uid;
-    private String nombre;
-    private String apellido;
-    private String email;
-    private String telefono;
-    private String rol;
-}
-```
-
-### Atributos:
-- `uid`: Identificador único del usuario (Firestore document ID).
-- `nombre`: Nombre del usuario.
-- `apellido`: Apellido del usuario.
-- `email`: Correo electrónico del usuario.
-- `telefono`: Número de teléfono.
-- `rol`: Rol del usuario dentro del sistema (Ej. admin, cliente, etc).
-
----
-
-## UsuarioService
-
-Clase que realiza operaciones CRUD en la colección `usuarios` de Firestore.
-
-### Métodos
-
-#### `List<Usuario> obtenerUsuarios()`
-Obtiene la lista completa de usuarios almacenados en Firestore.
-
-#### `String actualizarUsuario(String uid, Usuario usuario)`
-Actualiza el documento con el UID especificado en Firestore.
-
-#### `String eliminarUsuario(String uid)`
-Elimina el documento correspondiente al UID.
-
----
-
-## UsuarioController
-
-Controlador REST con mapeos HTTP para interactuar con los servicios de usuarios.
-
-### Endpoints
-
-| Método | Endpoint              | Descripción                            |
-|--------|-----------------------|----------------------------------------|
-| GET    | `/usuarios`           | Obtiene todos los usuarios             |
-| PUT    | `/usuarios/{uid}`     | Actualiza un usuario existente         |
-| DELETE | `/usuarios/{uid}`     | Elimina un usuario por UID             |
+- **`setDoc`**: Registra el rol asignado luego de logearse con github
