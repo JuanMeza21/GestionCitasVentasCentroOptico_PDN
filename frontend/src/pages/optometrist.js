@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { Home as HomeIcon, NotebookText, Eye, Calendar, LogOut } from 'lucide-react';
+
 import Home from "../components/optometrist-comp/HomeO";
 import Historia from "../components/optometrist-comp/Historia";
 import Evaluacion from "../components/optometrist-comp/Evaluacion";
 import Calendario from "../components/optometrist-comp/Calendario";
+
 import { getAuth, signOut } from "firebase/auth";
 
 export const Optometrist = () => {
@@ -12,7 +15,6 @@ export const Optometrist = () => {
     setSelectedComponent(componente);
   };
 
-  //Cerrar sesion
   const cerrarSesion = async () => {
     const auth = getAuth();
     try {
@@ -23,32 +25,50 @@ export const Optometrist = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen flex bg-blue-500 h-screen p-[1px]">
-      <div className="bg-blue-500 py-4 text-white w-1/5 h-screen flex flex-col">
-        <ol className="pl-5 flex-1">
-          <h1 className='px-2 text-[20px] mb-8 bg-blue-400 rounded-l-lg'>Optometra</h1>
-          <li className="cursor-pointer hover:bg-blue-400 px-2 rounded-l-lg mt-1" onClick={() => seleccionarComponente('home')}>Inicio</li>
-          <li className="cursor-pointer hover:bg-blue-400 px-2 rounded-l-lg mt-1" onClick={() => seleccionarComponente('historia')}>Historias clínicas</li>
-          <li className="cursor-pointer hover:bg-blue-400 px-2 rounded-l-lg mt-1" onClick={() => seleccionarComponente('evaluacion')}>Evaluaciones visuales</li>
-          <li className="cursor-pointer hover:bg-blue-400 px-2 rounded-l-lg mt-1" onClick={() => seleccionarComponente('calendario')}>Calendario de citas</li>
-        </ol>
+  const renderComponent = () => {
+    switch (selectedComponent) {
+      case 'home': return <Home />;
+      case 'historia': return <Historia />;
+      case 'evaluacion': return <Evaluacion />;
+      case 'calendario': return <Calendario />;
+      default: return <Home />;
+    }
+  };
 
-        <div className='pl-5'>
-          <button onClick={cerrarSesion} className="w-full text-left bg-blue-900 hover:bg-blue-950 text-white py-2 px-2 rounded-l-lg mt-auto">
+  return (
+    <div className="flex min-h-screen bg-blue-500">
+      <div className="w-1/5 bg-blue-600 py-6 text-white flex flex-col">
+        <h1 className="text-xl font-semibold px-5 mb-8">Panel de optometrista</h1>
+
+        <nav className="flex-1">
+          <ul className="pl-5 space-y-1">
+            <MenuItem label="Inicio" icon={<HomeIcon size={18} />} active={selectedComponent === 'home'} onClick={() => seleccionarComponente('home')} />
+            <MenuItem label="Historias clínicas" icon={<NotebookText size={18} />} active={selectedComponent === 'historia'} onClick={() => seleccionarComponente('historia')} />
+            <MenuItem label="Evaluaciones visuales" icon={<Eye size={18} />} active={selectedComponent === 'evaluacion'} onClick={() => seleccionarComponente('evaluacion')} />
+            <MenuItem label="Calendario de citas" icon={<Calendar size={18} />} active={selectedComponent === 'calendario'} onClick={() => seleccionarComponente('calendario')} />
+          </ul>
+        </nav>
+
+        <div className="pl-5 mt-4">
+          <button onClick={cerrarSesion}className="w-full flex items-center gap-2 bg-blue-900 hover:bg-blue-950 text-white py-2 px-3 rounded-l-lg">
+            <LogOut size={18} /> 
             Cerrar sesión
           </button>
         </div>
       </div>
 
-      <div className="w-4/5 bg-[#fff] m-[1px] px-2 py-4">
-        {selectedComponent === 'home' && <Home />}
-        {selectedComponent === 'historia' && <Historia />}
-        {selectedComponent === 'evaluacion' && <Evaluacion />}
-        {selectedComponent === 'calendario' && <Calendario />}
+      <div className="w-4/5 bg-white m-[1px] px-6 py-6 overflow-auto">
+        {renderComponent()}
       </div>
     </div>
   );
-}
+};
+
+
+const MenuItem = ({ label, icon, active, onClick }) => (
+  <li className={`cursor-pointer px-3 py-2 rounded-l-lg flex items-center gap-2 ${active ? "bg-blue-800 font-semibold" : "hover:bg-blue-500"}`}onClick={onClick}>
+    {icon} {label}
+  </li>
+);
 
 export default Optometrist;

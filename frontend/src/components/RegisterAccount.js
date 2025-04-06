@@ -13,7 +13,7 @@ export const Register_account = () => {
     email: "",
     telefono: "",
     password: "",
-    rol: "optometra", 
+    rol: "optometrista",
   });
 
   const [error, setError] = useState("");
@@ -61,8 +61,8 @@ export const Register_account = () => {
             <input name="password" onChange={infoInput} className="py-1 bg-[#f4f4f4] mb-2 px-2 rounded-lg" placeholder="Contraseña" type="password" required />
 
             <select name="rol" onChange={infoInput} className="py-1 bg-[#f4f4f4] mb-2 px-2 rounded-lg">
-              <option value="optometra">Optometrista</option>
-              <option value="secretaria">Secretario/a</option>
+              <option value="optometrista">Optometrista</option>
+              <option value="secretario/a">Secretario/a</option>
             </select>
 
             <button type="submit" className="cursor-pointer bg-blue-500 text-white rounded-lg py-1 mb-2">

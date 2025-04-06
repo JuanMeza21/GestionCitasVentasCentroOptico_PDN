@@ -1,4 +1,4 @@
-package com.example.backend_GCVCO;
+package com.example.backend_GCVCO.Services;
 
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
