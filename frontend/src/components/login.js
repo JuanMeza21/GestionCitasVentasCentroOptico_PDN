@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, githubProvider } from "../firebaseConfig";
 import Perfil from "../images/perfill.jpg";
+import { googleProvider } from "../firebaseConfig";
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -66,6 +67,44 @@ export const Login = () => {
       setError("Error al iniciar sesión con GitHub: " + err.message);
     }
   };
+
+  const loginConGoogle = async () => {
+    setError("");
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+  
+      const userDocRef = doc(db, "usuarios", user.uid);
+      const existingDoc = await getDoc(userDocRef);
+  
+      if (!existingDoc.exists()) {
+        await setDoc(userDocRef, {
+          uid: user.uid,
+          nombre: user.displayName || user.email?.split("@")[0] || "",
+          apellido: "",
+          email: user.email || "",
+          telefono: "",
+        });
+      }
+  
+      const rolFetch = await fetch(
+        `http://localhost:8080/autenticacion/getRole/${user.uid}`
+      );
+      const rol = await rolFetch.text();
+  
+      if (rol === "null" || rol === "" || rol === "Usuario no encontrado") {
+        setTempUser(user);
+        setShowRoleInput(true);
+      } else {
+        redirigirSegunRol(rol);
+      }
+    } catch (err) {
+      console.error("Error al iniciar sesión con Google:", err.code, err.message);
+      setError("Error al iniciar sesión con Google: " + err.message);
+    }
+  };
+
+
 
   const guardarRol = async () => {
     if (!selectedRole || !tempUser) {
@@ -156,9 +195,11 @@ export const Login = () => {
                 <button type="button" onClick={loginConGitHub} className="cursor-pointer bg-black text-white rounded-lg py-1 px-2 hover:bg-gray-800">
                   GitHub
                 </button>
-                <button type="button" className="cursor-pointer bg-green-600 text-white rounded-lg py-1 px-2 hover:bg-green-700">
+                <button type="button" onClick={loginConGoogle} className="cursor-pointer bg-green-600 text-white rounded-lg py-1 px-2 hover:bg-green-700">
                   Google
                 </button>
+
+
                 <button type="button" className="cursor-pointer bg-blue-600 text-white rounded-lg py-1 px-2 hover:bg-blue-700">
                   Facebook
                 </button>
