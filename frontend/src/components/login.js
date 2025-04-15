@@ -8,6 +8,9 @@ import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, githubProvider } from "../firebaseConfig";
 import Perfil from "../images/perfill.jpg";
 import { googleProvider } from "../firebaseConfig";
+import { FacebookAuthProvider } from "firebase/auth";
+
+export const facebookProvider = new FacebookAuthProvider();
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -104,7 +107,42 @@ export const Login = () => {
     }
   };
 
-
+  const loginConFacebook = async () => {
+    setError("");
+    try {
+      const result = await signInWithPopup(auth, facebookProvider);
+      const user = result.user;
+  
+      const userDocRef = doc(db, "usuarios", user.uid);
+      const existingDoc = await getDoc(userDocRef);
+  
+      if (!existingDoc.exists()) {
+        await setDoc(userDocRef, {
+          uid: user.uid,
+          nombre: user.displayName || user.email?.split("@")[0] || "",
+          apellido: "",
+          email: user.email || "",
+          telefono: "",
+        });
+      }
+  
+      const rolFetch = await fetch(
+        `http://localhost:8080/autenticacion/getRole/${user.uid}`
+      );
+      const rol = await rolFetch.text();
+  
+      if (rol === "null" || rol === "" || rol === "Usuario no encontrado") {
+        setTempUser(user);
+        setShowRoleInput(true);
+      } else {
+        redirigirSegunRol(rol);
+      }
+    } catch (err) {
+      console.error("Error al iniciar sesión con Facebook:", err.code, err.message);
+      setError("Error al iniciar sesión con Facebook: " + err.message);
+    }
+  };
+  
 
   const guardarRol = async () => {
     if (!selectedRole || !tempUser) {
@@ -200,9 +238,10 @@ export const Login = () => {
                 </button>
 
 
-                <button type="button" className="cursor-pointer bg-blue-600 text-white rounded-lg py-1 px-2 hover:bg-blue-700">
+                <button type="button" onClick={loginConFacebook} className="cursor-pointer bg-blue-600 text-white rounded-lg py-1 px-2 hover:bg-blue-700">
                   Facebook
                 </button>
+
               </div>
             </div>
 
