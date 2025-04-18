@@ -37,7 +37,7 @@ export const Optometrist = () => {
 
   return (
     <div className="flex min-h-screen bg-blue-500">
-      <div className="w-1/5 bg-blue-600 py-6 text-white flex flex-col">
+      <div className="w-1/6 bg-blue-600 py-6 text-white flex flex-col">
         <h1 className="text-xl font-semibold px-5 mb-8">Panel de optometrista</h1>
 
         <nav className="flex-1">
@@ -57,7 +57,7 @@ export const Optometrist = () => {
         </div>
       </div>
 
-      <div className="w-4/5 bg-white m-[1px] px-6 py-6 overflow-auto">
+      <div className="w-5/6 bg-white m-[1px] px-6 py-6 overflow-auto">
         {renderComponent()}
       </div>
     </div>

@@ -47,7 +47,7 @@ export const Register_account = () => {
   return (
     <div className="bg-slate-200">
       <div className="flex justify-center items-center h-screen">
-        <div className="bg-white text-center rounded-3xl px-8 w-[360px] border-2 shadow-lg">
+        <div className="bg-white text-center rounded-3xl px-6 w-[360px] border-2 shadow-lg">
           <h1 className="pt-4 text-[20px]">REGISTRARSE</h1>
           <div className="flex justify-center items-center my-4">
             <img className="w-[120px]" src={Perfil} alt="perfil" />
@@ -69,7 +69,7 @@ export const Register_account = () => {
               Registrarse
             </button>
 
-            <button onClick={() => navigate("/login")} type="button" className="cursor-pointer text-[15px] mb-2 hover:bg-blue-500 hover:text-[white] rounded-lg py-1">
+            <button onClick={() => navigate("/login")} type="button" className="cursor-pointer text-[15px] mb-4 hover:bg-blue-500 hover:text-[white] rounded-lg py-1">
               Volver a iniciar Sesión
             </button>
 

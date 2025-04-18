@@ -100,5 +100,3 @@ await setDoc(
 La autenticación con Google está completamente funcional. Los usuarios pueden ingresar al sistema, obtener su rol y acceder a las funcionalidades correspondientes de acuerdo a su perfil.
 
 ---
-
-¿Quieres que te lo prepare como archivo `.md` descargable o lo quieres junto al de GitHub en un solo documento?

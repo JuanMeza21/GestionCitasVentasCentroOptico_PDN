@@ -106,5 +106,3 @@ await setDoc(
 La autenticación con Facebook está completamente funcional. Los usuarios pueden autenticarse, registrarse automáticamente en Firestore si es su primera vez, asignar su rol y ser redirigidos a su panel correspondiente.
 
 ---
-
-¿Quieres que este archivo lo prepare en formato descargable `.md` o lo añadimos al mismo documento donde tienes la autenticación de Google y GitHub?

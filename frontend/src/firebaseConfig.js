@@ -21,4 +21,4 @@ const githubProvider = new GithubAuthProvider();
 const googleProvider = new GoogleAuthProvider();
 const facebookProvider = new FacebookAuthProvider();
 
-export { auth, db, githubProvider, googleProvider, signInWithPopup };
+export {auth,db,githubProvider,googleProvider,signInWithPopup,facebookProvider};
