@@ -16,7 +16,6 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Proveedores
 const githubProvider = new GithubAuthProvider();
 const googleProvider = new GoogleAuthProvider();
 const facebookProvider = new FacebookAuthProvider();
