@@ -1,12 +1,21 @@
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig"; 
-import { getDoc } from "firebase/firestore"; 
+import { getDoc } from "firebase/firestore";
+import { FaGithub, FaFacebook } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, githubProvider } from "../firebaseConfig";
 import Perfil from "../images/perfill.jpg";
+import { googleProvider } from "../firebaseConfig";
+import { FacebookAuthProvider } from "firebase/auth";
+import { sendPasswordResetEmail } from "firebase/auth";
+import Swal from "sweetalert2";
+
+export const facebookProvider = new FacebookAuthProvider();
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -22,6 +31,39 @@ export const Login = () => {
 
   const registrarClick = () => {
     navigate("/registro");
+  };
+
+  const recuperarContraseña = async () => {
+    setError("")
+    const correo = loginData.email.trim();
+
+    if (!correo) {
+      setError("Por favor ingresa tu correo electrónico primero.");
+      return;
+    }
+
+    try {
+      const usuariosRef = collection(db, "usuarios");
+      const consulta = query(usuariosRef, where("email", "==", correo));
+      const resultado = await getDocs(consulta);
+
+      if (resultado.empty) {
+        setError("Este correo no está registrado.");
+        return;
+      }
+      await sendPasswordResetEmail(auth, correo);
+      Swal.fire({
+        text: "Correo de recuperacion enviado correctamente. Ingresa la nueva contraseña.",
+        icon: "success",
+        confirmButtonText: "Ok",
+        customClass: {
+          confirmButton: "text-lg bg-blue-600 rounded-lg text-white",
+          popup: "text-base w-[300px]",
+        },
+      });
+    } catch (err) {
+      setError("No se pudo enviar el correo de recuperación.");
+    }
   };
 
   const loginConGitHub = async () => {
@@ -66,6 +108,79 @@ export const Login = () => {
       setError("Error al iniciar sesión con GitHub: " + err.message);
     }
   };
+
+  const loginConGoogle = async () => {
+    setError("");
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+  
+      const userDocRef = doc(db, "usuarios", user.uid);
+      const existingDoc = await getDoc(userDocRef);
+  
+      if (!existingDoc.exists()) {
+        await setDoc(userDocRef, {
+          uid: user.uid,
+          nombre: user.displayName || user.email?.split("@")[0] || "",
+          apellido: "",
+          email: user.email || "",
+          telefono: "",
+        });
+      }
+  
+      const rolFetch = await fetch(
+        `http://localhost:8080/autenticacion/getRole/${user.uid}`
+      );
+      const rol = await rolFetch.text();
+  
+      if (rol === "null" || rol === "" || rol === "Usuario no encontrado") {
+        setTempUser(user);
+        setShowRoleInput(true);
+      } else {
+        redirigirSegunRol(rol);
+      }
+    } catch (err) {
+      console.error("Error al iniciar sesión con Google:", err.code, err.message);
+      setError("Error al iniciar sesión con Google: " + err.message);
+    }
+  };
+
+  const loginConFacebook = async () => {
+    setError("");
+    try {
+      const result = await signInWithPopup(auth, facebookProvider);
+      const user = result.user;
+  
+      const userDocRef = doc(db, "usuarios", user.uid);
+      const existingDoc = await getDoc(userDocRef);
+  
+      if (!existingDoc.exists()) {
+        await setDoc(userDocRef, {
+          uid: user.uid,
+          nombre: user.displayName || user.email?.split("@")[0] || "",
+          apellido: "",
+          email: user.email || "",
+          telefono: "",
+        });
+      }
+  
+      const rolFetch = await fetch(
+        `http://localhost:8080/autenticacion/getRole/${user.uid}`
+      );
+      const rol = await rolFetch.text();
+  
+      if (rol === "null" || rol === "" || rol === "Usuario no encontrado") {
+        setTempUser(user);
+        setShowRoleInput(true);
+      } else {
+        redirigirSegunRol(rol);
+      }
+    } catch (err) {
+      console.error("Error al iniciar sesión con Facebook:", err.code, err.message);
+      setError("Error al iniciar sesión con Facebook: " + err.message);
+    }
+  };
+  
 
   const guardarRol = async () => {
     if (!selectedRole || !tempUser) {
@@ -117,7 +232,7 @@ export const Login = () => {
 
   return (
     <div className="flex justify-center items-center h-screen bg-slate-200">
-      <div className="bg-white text-center rounded-3xl px-8 w-[360px] border-2 shadow-lg">
+      <div className="bg-white text-center rounded-3xl px-6 w-[360px] border-2 shadow-lg">
         <h1 className="pt-4 text-[20px]">INICIAR SESIÓN</h1>
 
         <div className="flex justify-center items-center my-4">
@@ -132,8 +247,8 @@ export const Login = () => {
               <option value="optometrista">Optometrista</option>
               <option value="secretario/a">Secretario/a</option>
             </select>
-            <button onClick={guardarRol}className="bg-blue-500 text-white py-1 px-3 rounded-lg hover:bg-green-600">
-              Guardar Rol
+            <button onClick={guardarRol}className="bg-blue-500 text-white py-1 mb-2 px-3 rounded-lg hover:bg-blue-600">
+              Guardar rol
             </button>
           </div>
         ) : (
@@ -141,26 +256,31 @@ export const Login = () => {
             <input name="email" onChange={infoInput} className="py-1 focus:outline-none bg-[#f4f4f4] mb-2 px-2 rounded-lg" placeholder="Correo electrónico" type="email" required />
             <input name="password" onChange={infoInput} className="py-1 focus:outline-none bg-[#f4f4f4] mb-2 px-2 rounded-lg" placeholder="Contraseña" type="password" required />
 
-            <button type="submit" className="cursor-pointer bg-blue-500 text-white rounded-lg py-1 mb-2">
+            <button type="submit" className="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white rounded-lg py-1 mb-2">
               Ingresar
             </button>
-
-            <button type="button" onClick={registrarClick} className="cursor-pointer text-[15px] mb-2 hover:bg-blue-500 hover:text-[white] rounded-lg py-1">
+            <button type="button" onClick={registrarClick} className="cursor-pointer text-[15px] mb-2 text-white bg-blue-500 hover:bg-blue-600 rounded-lg py-1">
               Registrarse
+            </button>
+
+            <button type="button"onClick={recuperarContraseña}className="text-[13px] hover:text-blue-500 mb-3">
+              ¿Olvidaste tu contraseña?
             </button>
 
             <div className="bg-[#f4f4f4] h-1 rounded-lg"></div>
             <div className="flex flex-col items-center justify-center text-center pb-4 mt-4">
               <h1 className="mb-2">Ingresar con</h1>
-              <div className="flex gap-1">
-                <button type="button" onClick={loginConGitHub} className="cursor-pointer bg-black text-white rounded-lg py-1 px-2 hover:bg-gray-800">
-                  GitHub
+              <div className="flex justify-center gap-1 w-full">
+                <button type="button"onClick={loginConGitHub}className="flex items-center justify-center gap-2 cursor-pointer bg-black text-white rounded-lg py-1.5 px-3 border-2 border-black hover:bg-gray-700 hover:border-gray-700 transition">
+                  <FaGithub size={20} color="white" />
                 </button>
-                <button type="button" className="cursor-pointer bg-green-600 text-white rounded-lg py-1 px-2 hover:bg-green-700">
-                  Google
+
+                <button type="button"onClick={loginConGoogle}className="flex items-center justify-center gap-2 cursor-pointer bg-white text-black rounded-lg py-1.5 px-3 border-2 hover:border-gray-800 transition">
+                  <FcGoogle size={20} />
                 </button>
-                <button type="button" className="cursor-pointer bg-blue-600 text-white rounded-lg py-1 px-2 hover:bg-blue-700">
-                  Facebook
+
+                <button type="button"onClick={loginConFacebook}className="flex items-center justify-center gap-2 cursor-pointer bg-blue-600 text-white rounded-lg py-1.5 px-3 border-2 border-blue-600 hover:bg-blue-800 hover:border-blue-800 transition">
+                  <FaFacebook size={20} color="white" />
                 </button>
               </div>
             </div>

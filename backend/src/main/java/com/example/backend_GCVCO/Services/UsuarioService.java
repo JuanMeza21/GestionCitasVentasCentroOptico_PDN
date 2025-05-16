@@ -3,6 +3,8 @@ package com.example.backend_GCVCO.Services;
 import com.example.backend_GCVCO.Usuario;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserRecord;
 import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +46,10 @@ public class UsuarioService {
 
     public String eliminarUsuario(String uid) throws Exception {
         Firestore db = FirestoreClient.getFirestore();
+        
+        UserRecord userRecord = FirebaseAuth.getInstance().getUser(uid);
+        FirebaseAuth.getInstance().deleteUser(uid);
+
         ApiFuture<WriteResult> result = db.collection(COLLECTION_NAME).document(uid).delete();
         return result.get().getUpdateTime().toString();
     }
