@@ -4,7 +4,7 @@ import Login from "./components/login";
 import RegisterAccount from "./components/RegisterAccount";
 import Secretary from "./pages/secretary";
 import Optometrist from "./pages/optometrist";
-
+import Admin from "./pages/admin";
 
 function App() {
   return (
@@ -15,6 +15,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/secretary" element={<Secretary />} />
         <Route path="/optometrist" element={<Optometrist />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </Router>
   );
