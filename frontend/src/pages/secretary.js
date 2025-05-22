@@ -7,7 +7,6 @@ import Inventario from "../components/secretary-comp/Inventario";
 import Registro from "../components/secretary-comp/RegistroCitas";
 import Calendario from "../components/optometrist-comp/Calendario";
 import Clientes from "../components/secretary-comp/Cliente";
-import Usuarios from "../components/secretary-comp/Usuarios";
 
 import { getAuth, signOut } from "firebase/auth";
 
@@ -36,7 +35,6 @@ export const Secretary = () => {
       case 'inventario': return <Inventario />;
       case 'calendario': return <Calendario />;
       case 'clientes': return <Clientes />;
-      case 'usuarios': return <Usuarios />;
 
       default: return <Home />;
     }
@@ -55,7 +53,6 @@ export const Secretary = () => {
             <MenuItem label="Ventas" icon={<ShoppingCart size={18} />} active={selectedComponent === "ventas"} onClick={() => seleccionarComponente("ventas")} />
             <MenuItem label="Ver inventario" icon={<PackageSearch size={18} />} active={selectedComponent === "inventario"} onClick={() => seleccionarComponente("inventario")} />
             <MenuItem label="Calendario de citas" icon={<Calendar size={18} />} active={selectedComponent === "calendario"} onClick={() => seleccionarComponente("calendario")} />
-            <MenuItem label="Usuarios del sistema" icon={<Users size={18} />} active={selectedComponent === "usuarios"} onClick={() => seleccionarComponente("usuarios")} />
           </ul>
         </nav>
 

@@ -1,29 +1,33 @@
-import { doc, setDoc } from "firebase/firestore";
-import { db } from "../firebaseConfig"; 
-import { getDoc } from "firebase/firestore";
+import { doc,setDoc,getDoc,collection,query,where,getDocs } from "firebase/firestore";
+import { db } from "../firebaseConfig";
 import { FaGithub, FaFacebook } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { collection, query, where, getDocs } from "firebase/firestore";
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import { auth, githubProvider } from "../firebaseConfig";
+import { signInWithEmailAndPassword,signInWithPopup,GithubAuthProvider,GoogleAuthProvider,FacebookAuthProvider,sendPasswordResetEmail } from "firebase/auth";
+import { auth } from "../firebaseConfig";
 import Perfil from "../images/perfill.jpg";
-import { googleProvider } from "../firebaseConfig";
-import { FacebookAuthProvider } from "firebase/auth";
-import { sendPasswordResetEmail } from "firebase/auth";
 import Swal from "sweetalert2";
-
-export const facebookProvider = new FacebookAuthProvider();
 
 export const Login = () => {
   const navigate = useNavigate();
   const [loginData, setLoginData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [showRoleInput, setShowRoleInput] = useState(false);
-  const [tempUser, setTempUser] = useState(null); 
+  const [tempUser, setTempUser] = useState(null);
   const [selectedRole, setSelectedRole] = useState("");
+
+  const githubProvider = new GithubAuthProvider();
+  githubProvider.addScope("user:email");
+  githubProvider.addScope("read:user");
+
+  const googleProvider = new GoogleAuthProvider();
+  googleProvider.addScope("profile");
+  googleProvider.addScope("email");
+
+  const facebookProvider = new FacebookAuthProvider();
+  facebookProvider.addScope("email");
+  facebookProvider.addScope("public_profile");
 
   const infoInput = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
@@ -34,7 +38,7 @@ export const Login = () => {
   };
 
   const recuperarContraseña = async () => {
-    setError("")
+    setError("");
     const correo = loginData.email.trim();
 
     if (!correo) {
@@ -66,13 +70,22 @@ export const Login = () => {
     }
   };
 
-  const loginConGitHub = async () => {
+  const controladorProveedorLogin = async (provider, providerName) => {
     setError("");
     try {
-      const result = await signInWithPopup(auth, githubProvider);
+      const result = await signInWithPopup(auth, provider);
       const user = result.user;
+      const infoAdicionalUser = result._tokenResponse || {};
 
-      console.log(user);
+      let userEmail = user.email || infoAdicionalUser.email 
+
+      let userName = user.displayName ||infoAdicionalUser.displayName || infoAdicionalUser.screenName || userEmail.split("@")[0];
+
+      console.log("Datos:", {
+        user: result.user,
+        providerData: result.user.providerData,
+        tokenResponse: result._tokenResponse,
+      });
 
       const userDocRef = doc(db, "usuarios", user.uid);
       const existingDoc = await getDoc(userDocRef);
@@ -80,17 +93,25 @@ export const Login = () => {
       if (!existingDoc.exists()) {
         await setDoc(userDocRef, {
           uid: user.uid,
-          nombre: user.displayName || user.email?.split("@")[0] || "",
+          nombre: userName,
           apellido: "",
-          email: user.email || "",
+          email: userEmail,
           telefono: "",
+          proveedor: providerName,
         });
+      } else {
+        await setDoc(
+          userDocRef,
+          {
+            proveedor: providerName,
+          },
+          { merge: true }
+        );
       }
 
       const rolFetch = await fetch(
         `http://localhost:8080/autenticacion/getRole/${user.uid}`
       );
-
       const rol = await rolFetch.text();
 
       if (rol === "null" || rol === "" || rol === "Usuario no encontrado") {
@@ -101,86 +122,23 @@ export const Login = () => {
       }
     } catch (err) {
       console.error(
-        "Error al iniciar sesión con GitHub:",
+        `Error al iniciar sesión con ${providerName}:`,
         err.code,
         err.message
       );
-      setError("Error al iniciar sesión con GitHub: " + err.message);
+      setError(`Error al iniciar sesión con ${providerName}: ${err.message}`);
+
+      if (err.code === "auth/account-exists-with-different-credential") {
+        setError(
+          "Ya existe una cuenta con este email usando otro proveedor. Inicia sesión con ese método."
+        );
+      }
     }
   };
 
-  const loginConGoogle = async () => {
-    setError("");
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
-  
-      const userDocRef = doc(db, "usuarios", user.uid);
-      const existingDoc = await getDoc(userDocRef);
-  
-      if (!existingDoc.exists()) {
-        await setDoc(userDocRef, {
-          uid: user.uid,
-          nombre: user.displayName || user.email?.split("@")[0] || "",
-          apellido: "",
-          email: user.email || "",
-          telefono: "",
-        });
-      }
-  
-      const rolFetch = await fetch(
-        `http://localhost:8080/autenticacion/getRole/${user.uid}`
-      );
-      const rol = await rolFetch.text();
-  
-      if (rol === "null" || rol === "" || rol === "Usuario no encontrado") {
-        setTempUser(user);
-        setShowRoleInput(true);
-      } else {
-        redirigirSegunRol(rol);
-      }
-    } catch (err) {
-      console.error("Error al iniciar sesión con Google:", err.code, err.message);
-      setError("Error al iniciar sesión con Google: " + err.message);
-    }
-  };
-
-  const loginConFacebook = async () => {
-    setError("");
-    try {
-      const result = await signInWithPopup(auth, facebookProvider);
-      const user = result.user;
-  
-      const userDocRef = doc(db, "usuarios", user.uid);
-      const existingDoc = await getDoc(userDocRef);
-  
-      if (!existingDoc.exists()) {
-        await setDoc(userDocRef, {
-          uid: user.uid,
-          nombre: user.displayName || user.email?.split("@")[0] || "",
-          apellido: "",
-          email: user.email || "",
-          telefono: "",
-        });
-      }
-  
-      const rolFetch = await fetch(
-        `http://localhost:8080/autenticacion/getRole/${user.uid}`
-      );
-      const rol = await rolFetch.text();
-  
-      if (rol === "null" || rol === "" || rol === "Usuario no encontrado") {
-        setTempUser(user);
-        setShowRoleInput(true);
-      } else {
-        redirigirSegunRol(rol);
-      }
-    } catch (err) {
-      console.error("Error al iniciar sesión con Facebook:", err.code, err.message);
-      setError("Error al iniciar sesión con Facebook: " + err.message);
-    }
-  };
-  
+  const loginConGitHub = () => controladorProveedorLogin(githubProvider, "github");
+  const loginConGoogle = () => controladorProveedorLogin(googleProvider, "google");
+  const loginConFacebook = () => controladorProveedorLogin(facebookProvider, "facebook");
 
   const guardarRol = async () => {
     if (!selectedRole || !tempUser) {
@@ -208,6 +166,8 @@ export const Login = () => {
       navigate("/optometrist");
     } else if (rol === "secretario/a") {
       navigate("/secretary");
+    } else if (rol === "admin") {
+      navigate("/admin");
     } else {
       setError("No se encontró un rol válido.");
     }
@@ -217,10 +177,16 @@ export const Login = () => {
     e.preventDefault();
     setError("");
     try {
-      const userCredencial = await signInWithEmailAndPassword(auth, loginData.email, loginData.password);
+      const userCredencial = await signInWithEmailAndPassword(
+        auth,
+        loginData.email,
+        loginData.password
+      );
       const user = userCredencial.user;
 
-      const rolFetch = await fetch(`http://localhost:8080/autenticacion/getRole/${user.uid}`);
+      const rolFetch = await fetch(
+        `http://localhost:8080/autenticacion/getRole/${user.uid}`
+      );
       const rol = await rolFetch.text();
 
       redirigirSegunRol(rol);
@@ -241,7 +207,9 @@ export const Login = () => {
 
         {showRoleInput ? (
           <div className="flex flex-col items-center py-4">
-            <label className="mb-2 text-sm font-semibold">Selecciona tu rol:</label>
+            <label className="mb-2 text-sm font-semibold">
+              Selecciona tu rol:
+            </label>
             <select value={selectedRole}onChange={(e) => setSelectedRole(e.target.value)}className="mb-4 p-1 rounded-md bg-slate-100">
               <option value="">Selecciona</option>
               <option value="optometrista">Optometrista</option>
@@ -252,14 +220,14 @@ export const Login = () => {
             </button>
           </div>
         ) : (
-          <form onSubmit={controlarLogin} className="grid items-center text-center py-2 px-4">
-            <input name="email" onChange={infoInput} className="py-1 focus:outline-none bg-[#f4f4f4] mb-2 px-2 rounded-lg" placeholder="Correo electrónico" type="email" required />
-            <input name="password" onChange={infoInput} className="py-1 focus:outline-none bg-[#f4f4f4] mb-2 px-2 rounded-lg" placeholder="Contraseña" type="password" required />
+          <form onSubmit={controlarLogin}className="grid items-center text-center py-2 px-4">
+            <input name="email"onChange={infoInput}className="py-1 focus:outline-none bg-[#f4f4f4] mb-2 px-2 rounded-lg"placeholder="Correo electrónico"type="email"required/>
+            <input name="password"onChange={infoInput}className="py-1 focus:outline-none bg-[#f4f4f4] mb-2 px-2 rounded-lg"placeholder="Contraseña"type="password"required/>
 
-            <button type="submit" className="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white rounded-lg py-1 mb-2">
+            <button type="submit"className="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white rounded-lg py-1 mb-2">
               Ingresar
             </button>
-            <button type="button" onClick={registrarClick} className="cursor-pointer text-[15px] mb-2 text-white bg-blue-500 hover:bg-blue-600 rounded-lg py-1">
+            <button type="button"onClick={registrarClick}className="cursor-pointer text-[15px] mb-2 text-white bg-blue-500 hover:bg-blue-600 rounded-lg py-1">
               Registrarse
             </button>
 

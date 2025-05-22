@@ -3,8 +3,8 @@ package com.example.backend_GCVCO.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.backend_GCVCO.Usuario;
 import com.example.backend_GCVCO.Services.UsuarioService;
+import com.example.backend_GCVCO.models.Usuario;
 
 import java.util.List;
 

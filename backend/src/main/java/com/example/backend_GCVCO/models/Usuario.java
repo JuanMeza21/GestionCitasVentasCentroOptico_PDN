@@ -1,4 +1,4 @@
-package com.example.backend_GCVCO;
+package com.example.backend_GCVCO.models;
 
 public class Usuario {
     private String uid;
@@ -7,6 +7,7 @@ public class Usuario {
     private String email;
     private String telefono;
     private String rol;
+    private String proveedor;
 
     public String getUid() {
         return uid;
@@ -54,5 +55,13 @@ public class Usuario {
 
     public void setRol(String rol) {
         this.rol = rol;
+    }
+
+    public String getProveedor() {
+        return proveedor;
+    }
+
+    public void setProveedor(String proveedor) {
+        this.proveedor = proveedor;
     }
 }
