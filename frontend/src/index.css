@@ -7,3 +7,10 @@
 * {
     font-family: 'Poppins', sans-serif;
 }
+
+.input {
+  @apply border border-gray-300 rounded p-2 w-full;
+}
+.textarea {
+  @apply border border-gray-300 rounded p-2 w-full h-24;
+}
