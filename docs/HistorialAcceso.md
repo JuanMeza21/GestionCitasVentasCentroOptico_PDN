@@ -24,9 +24,62 @@ await fetch("http://localhost:8080/usuarios/registrar-acceso", {
 **Ruta:** `POST /usuarios/registrar-acceso`  
 **Funcionalidad:** Recibe un JSON con datos del usuario (UID, nombre, email, proveedor, etc.) y registra un nuevo acceso con marca de tiempo en la base de datos.
 
+- **UsuarioController.java** recibe la solicitud:
+```javascript
+@PostMapping("/registrar-acceso")
+public void registrarAcceso(@RequestBody Usuario usuario) throws Exception {
+    usuarioService.registrarAcceso(usuario);
+}
+```
+
+- **UsuarioService.java** almacena en Firestore:
+```javascript
+public void registrarAcceso(Usuario usuario) throws ExecutionException, InterruptedException {
+    Map<String, Object> acceso = new HashMap<>();
+    acceso.put("uid", usuario.getUid());
+    acceso.put("nombre", usuario.getNombre());
+    acceso.put("apellido", usuario.getApellido());
+    acceso.put("email", usuario.getEmail());
+    acceso.put("telefono", usuario.getTelefono());
+    acceso.put("rol", usuario.getRol());
+    acceso.put("proveedor", usuario.getProveedor());
+    acceso.put("fechaAcceso", FieldValue.serverTimestamp());
+    
+    db.collection("accesosUsuario").document().set(acceso).get();
+}
+```
+
 ### Endpoint para listar accesos
 **Ruta:** `GET /usuarios/historial-accesos`  
 **Funcionalidad:** Devuelve una lista de todos los accesos registrados por los usuarios, incluyendo fecha, hora y datos del usuario.
+
+- **UsuarioController.java** maneja la petición:
+```javascript
+@GetMapping("/historial-accesos")
+public List<Map<String, Object>> obtenerHistorialAccesos() throws Exception {
+    return usuarioService.obtenerHistorialAccesos();
+}
+```
+
+- **UsuarioService.java** consulta Firestore:
+```javascript
+public List<Map<String, Object>> obtenerHistorialAccesos() throws ExecutionException, InterruptedException {
+    Query query = db.collection("accesosUsuario").orderBy("fechaAcceso", Query.Direction.DESCENDING);
+    
+    List<Map<String, Object>> accesos = new ArrayList<>();
+    for (QueryDocumentSnapshot doc : query.get().getDocuments()) {
+        Map<String, Object> acceso = doc.getData();
+        acceso.put("id", doc.getId()); 
+        if (acceso.containsKey("fechaAcceso")) {
+            acceso.put("fechaAcceso", acceso.get("fechaAcceso").toString());
+        }
+        accesos.add(acceso);
+    }
+    return accesos;
+}
+```
+
+El método `obtenerHistorialAccesos()` recupera desde Firestore todos los accesos de usuarios almacenados en la colección `accesosUsuario`, ordenados por fecha de forma descendente. Cada acceso se convierte en un mapa que incluye los datos del usuario, el ID del documento y la fecha en formato de texto. Devuelve una lista con todos los registros, para mostrar un historial cronológico en el frontend.
 
 ## 3. Componente `HistorialAccesos` - Llamado al Endpoint
 
