@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Users, LogOut } from 'lucide-react';
+import { Users, LogOut, History } from 'lucide-react';
 
 import Usuarios from "../components/secretary-comp/Usuarios";
+import HistorialAccesos from "../components/HistorialAccesos";
 
 import { getAuth, signOut } from "firebase/auth";
 
@@ -25,6 +26,7 @@ export const Secretary = () => {
   const renderComponent = () => {
     switch (selectedComponent) {
       case 'usuarios': return <Usuarios />;
+      case 'historial': return <HistorialAccesos />;
 
       default: return <Usuarios />;
     }
@@ -38,6 +40,7 @@ export const Secretary = () => {
         <nav className="flex-1">
           <ul className="pl-5 space-y-1">
             <MenuItem label="Usuarios del sistema" icon={<Users size={18} />} active={selectedComponent === "usuarios"} onClick={() => seleccionarComponente("usuarios")} />
+            <MenuItem label="Historial de accesos" icon={<History size={18} />} active={selectedComponent === "historial"} onClick={() => seleccionarComponente("historial")} />
           </ul>
         </nav>
 
