@@ -106,3 +106,50 @@ useEffect(() => {
 ---
 
 Con esto se puede ver y controlar el acceso historico de los diferentes usarios.
+
+
+# Sistema de Filtrado para Historial de Accesos
+
+## Funcionalidad Completa del Filtrado
+
+El componente implementa un sistema de filtrado flexible que combina múltiples criterios:
+
+### 1. Filtrado por Búsqueda de Texto
+Busca coincidencias en nombre, apellido, email y rol de forma insensible a mayúsculas/minúsculas, utilizando coincidencias parciales (`includes()`). El operador `?.` previene errores con valores nulos.
+
+### 2. Filtrado por Fecha (UTC-5)
+- **Modo "Todas las fechas"**: Muestra el historial completo (activado por defecto)
+- **Filtro por fecha específica**: 
+  - Se activa al seleccionar una fecha en el DatePicker
+  - Compara fechas convertidas a UTC-5 (zona horaria de Colombia/Perú/Ecuador)
+  - Ignora la hora, comparando solo día/mes/año
+  - El DatePicker incluye selección visual con dropdowns para mes/año
+
+### 3. Ordenamiento Dinámico
+Permite ordenar por:
+- **Fecha de acceso**: Comparando timestamps exactos
+- **Otros campos (nombre, email, rol)**: Orden alfabético
+- Alterna entre orden ascendente/descendente con cada click en el encabezado
+
+### 4. Interfaz Integrada
+- **Campo de búsqueda**: Con icono de lupa y placeholder descriptivo
+- **Selector de fecha**: 
+  - Botón "Todas las fechas" para restablecer
+  - DatePicker con máximo hasta fecha actual
+- **Botón "Limpiar filtros"**: Restablece todos los criterios
+- Diseño responsive (1 columna en móviles, 3 en desktop)
+
+### 5. Flujo de Procesamiento
+1. Carga inicial desde API
+2. Aplicación secuencial de filtros:
+   - Texto → Fecha → Ordenamiento
+3. Paginación automática:
+   - Calcula páginas según resultados filtrados
+   - Ajusta índices para la página actual
+   - Navegación con botones Anterior/Siguiente y saltos
+
+### 6. Manejo de Zona Horaria (UTC-5)
+Todas las fechas se convierten a UTC-5 antes de:
+- Mostrarse en la tabla
+- Realizar comparaciones
+- Aplicar filtros
